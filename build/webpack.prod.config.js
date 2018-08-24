@@ -10,23 +10,34 @@ var config = require('./config');
 
 var pages = ['web', 'admin'];   // 页面
 var vendorPlugins = [];
-pages.map( np => {
+if( pages.length > 0 ) {
+    pages.map( np => {
+        vendorPlugins.push(
+            new webpack.optimize.CommonsChunkPlugin({
+                name: np+'-vendor',
+                chunks: [np],
+                minChunks: function (module) {
+                    return module.context && module.context.indexOf("node_modules") !== -1;
+                }
+            })
+        )
+    });
     vendorPlugins.push(
         new webpack.optimize.CommonsChunkPlugin({
-            name: np+'-vendor',
-            chunks: [np],
+            name: 'vendor',
+            chunks: pages.map( np => np+'-vendor' )
+        })
+    );
+} else {
+    vendorPlugins.push(
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
             minChunks: function (module) {
                 return module.context && module.context.indexOf("node_modules") !== -1;
             }
         })
     )
-});
-vendorPlugins.push(
-    new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        chunks: pages.map( np => np+'-vendor' )
-    })
-);
+}
 
 module.exports = merge(baseWebpackConfig, {
     output: {
