@@ -7,8 +7,8 @@ var path = require('path');
 var baseWebpackConfig = require('./webpack.base.config');
 var utils = require('./utils');
 var config = require('./config');
+var pages = require('./pages');
 
-var pages = ['web', 'admin'];   // 页面
 var vendorPlugins = [];
 if( pages.length > 0 ) {
     pages.map( np => {

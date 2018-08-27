@@ -1,16 +1,22 @@
 var webpack = require('webpack');
 var path = require('path');
 var utils = require('./utils');
+var pages = require('./pages');
 
 function resolve(relPath) {
     return path.resolve(__dirname, relPath);
 }
 
+function pageEntry() {
+    var ret = {};
+    pages.map(function(key) {
+        ret[key] = resolve('../src/pages/'+key+'/main.js');
+    });
+    return ret;
+}
+
 module.exports = {
-    entry: {
-        web: resolve('../src/pages/web/main.js'),
-        admin: resolve('../src/pages/admin/main.js')
-    },
+    entry: pageEntry(),
     output: {
         filename: 'js/[name].js',
         chunkFilename: "js/[name].[chunkhash].js"
